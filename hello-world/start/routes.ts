@@ -28,3 +28,19 @@ Route.post( '/posts', 'PostsController.create')
 Route.put( '/posts', 'PostsController.update')
 Route.patch( '/posts', 'PostsController.update')
 Route.delete( '/posts', 'PostsController.delete')
+
+Route.post('/todos', 'TodosController.create');
+Route.get('/todos', 'TodosController.list');
+Route.get('/todos/:id', 'TodosController.read');
+
+Route.post('/upload', 'TodosController.upload')
+
+Route.group(()=>{
+  Route.post('/sign-up','AuthController.signUp')
+  Route.post('/sign-in','AuthController.signIn')
+}).prefix('/auth')
+
+Route.group(()=>{
+  Route.get('/auth/profile','AuthController.profile')
+  Route.get('/auth/sign-out', 'AuthController.signOut')
+}).middleware('auth')
