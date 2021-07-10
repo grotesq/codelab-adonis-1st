@@ -62,3 +62,10 @@ Route.group(() => {
   Route.patch('/comments/:id', 'CommentsController.update') // shortcut
   Route.delete('/comments/:id', 'CommentsController.delete') // shortcut
 }).middleware('auth')
+
+// TODO : 권한 구분
+// TODO : 관리자 API
+// TODO : 신고 API
+// TODO : 문서화
+// TODO : 스크랩
+// TODO : 알림
