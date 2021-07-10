@@ -33,14 +33,25 @@ Route.get('/', async () => {
 
 Route.post('/auth/sign-up', 'AuthController.signUp');
 Route.post('/auth/sign-in', 'AuthController.signIn');
+Route.get('/auth/verify-email', 'AuthController.verifyEmail');
+Route.get('/auth/verify-display-name', 'AuthController.verifyDisplayName')
 
 Route.get('/posts', 'PostsController.list');
-Route.get("/posts/:id", 'PostsController.read')
+Route.get("/posts/:slug", 'PostsController.read'); // shortcut
+
+Route.get('/users/:displayName', 'UsersController.list');
+Route.get('/users/:displayName/:slug', 'UsersController.read');
 
 Route.group(() => {
+  Route.get('/auth/verify-token', 'AuthController.verifyToken');
+
   Route.get('/me', 'MeController.getProfile')
+  Route.patch('/me', 'MeController.updateProfile')
+  Route.delete('/me', 'MeController.leave')
+  Route.get('/me/posts', 'MeController.getPosts')
+  Route.get('/me/posts/:slug', 'MeController.getPost')
 
   Route.post('/posts', 'PostsController.create')
-  Route.patch('/posts/:id', 'PostsController.update')
-  Route.delete('/posts/:id', 'PostsController.delete')
+  Route.patch('/posts/:slug', 'PostsController.update')
+  Route.delete('/posts/:slug', 'PostsController.delete')
 }).middleware('auth')

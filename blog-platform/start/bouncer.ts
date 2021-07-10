@@ -6,8 +6,6 @@
  */
 
 import Bouncer from '@ioc:Adonis/Addons/Bouncer'
-import Post from "App/Models/Post";
-import User from "App/Models/User";
 
 /*
 |--------------------------------------------------------------------------
@@ -31,13 +29,7 @@ import User from "App/Models/User";
 | NOTE: Always export the "actions" const from this file
 |****************************************************************
 */
-export const {actions} = Bouncer
-  .define('editPost', (user: User, post: Post) => {
-    return user.id === post.userId
-  })
-  .define('deletePost', (user: User, post: Post) => {
-    return user.id === post.userId
-  })
+export const {actions} = Bouncer;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,4 +54,6 @@ export const {actions} = Bouncer
 | NOTE: Always export the "policies" const from this file
 |****************************************************************
 */
-export const {policies} = Bouncer.registerPolicies({})
+export const {policies} = Bouncer.registerPolicies({
+  PostPolicy: () => import('App/Policies/PostPolicy')
+})
