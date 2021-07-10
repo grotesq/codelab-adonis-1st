@@ -16,6 +16,7 @@ export default class PostsController {
   async list({request}: HttpContextContract) {
     const {displayName, page, perPage} = request.qs();
     let query = Post.query()
+      .preload('user')
       .where('publish_at', '<=', DateTime.now().toISO())
       .orderBy('publish_at', 'desc');
     if (displayName) {
@@ -47,6 +48,7 @@ export default class PostsController {
   async read({params}: HttpContextContract) {
     const {slug} = params;
     const post = await Post.query()
+      .preload('user')
       .where('publish_at', '<=', DateTime.now().toISO())
       .where('slug', slug)
       .firstOrFail()

@@ -9,6 +9,7 @@ export default class UsersController {
     const {page, perPage} = request.qs();
     const user = await User.findByOrFail('displayName', displayName);
     return await Post.query().where('user_id', user.id)
+      .preload('user')
       .where('publish_at', '<=', DateTime.now().toISO())
       .orderBy('publish_at', 'desc')
       .paginate(page || 1, perPage || 12);
@@ -17,7 +18,9 @@ export default class UsersController {
   async read({params, response}: HttpContextContract) {
     const {displayName, slug} = params;
     const user = await User.findByOrFail('displayName', displayName);
-    const post = await Post.query().where('user_id', user.id)
+    const post = await Post.query()
+      .preload('user')
+      .where('user_id', user.id)
       .where('slug', slug)
       .first()
     if (!post) {

@@ -38,6 +38,7 @@ Route.get('/auth/verify-display-name', 'AuthController.verifyDisplayName')
 
 Route.get('/posts', 'PostsController.list');
 Route.get("/posts/:slug", 'PostsController.read'); // shortcut
+Route.get("/posts/:slug/comments", 'CommentsController.list');
 
 Route.get('/users/:displayName', 'UsersController.list');
 Route.get('/users/:displayName/:slug', 'UsersController.read');
@@ -54,4 +55,10 @@ Route.group(() => {
   Route.post('/posts', 'PostsController.create')
   Route.patch('/posts/:slug', 'PostsController.update')
   Route.delete('/posts/:slug', 'PostsController.delete')
+
+  Route.post('/posts/:slug/comments', 'CommentsController.create')
+  Route.patch('/posts/:slug/comments/:id', 'CommentsController.update')
+  Route.delete('/posts/:slug/comments/:id', 'CommentsController.delete')
+  Route.patch('/comments/:id', 'CommentsController.update') // shortcut
+  Route.delete('/comments/:id', 'CommentsController.delete') // shortcut
 }).middleware('auth')
