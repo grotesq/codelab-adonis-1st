@@ -18,13 +18,6 @@
 |
 */
 
-// blog-platform.com
-// blog-platform.com/@/user1
-// user1.blog-platform.com - 제외
-
-// [GET] /:displayName/posts/
-// [GET] posts?displayName=user1
-
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.get('/', async () => {
@@ -63,6 +56,8 @@ Route.group(() => {
   Route.delete('/comments/:id', 'CommentsController.delete') // shortcut
 }).middleware('auth')
 
+// TODO : 사용자 이미지 업로드
+// TODO : 입력 데이터 유효성 검증
 // TODO : 권한 구분
 // TODO : 관리자 API
 // TODO : 신고 API
