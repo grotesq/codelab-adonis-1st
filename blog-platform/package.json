@@ -1,0 +1,32 @@
+{
+  "name": "blog-platform",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node ace build --production",
+    "start": "node server.js",
+    "dev": "node ace serve --watch"
+  },
+  "devDependencies": {
+    "@adonisjs/assembler": "^5.3.2",
+    "adonis-preset-ts": "^2.1.0",
+    "pino-pretty": "^5.1.1",
+    "typescript": "^4.2.4",
+    "youch": "^2.2.2",
+    "youch-terminal": "^1.1.1"
+  },
+  "dependencies": {
+    "@adonisjs/auth": "^8.0.7",
+    "@adonisjs/bouncer": "^2.2.4",
+    "@adonisjs/core": "^5.1.9",
+    "@adonisjs/lucid": "^15.0.3",
+    "@adonisjs/repl": "^3.1.4",
+    "luxon": "^1.28.0",
+    "pg": "^8.6.0",
+    "phc-argon2": "^1.1.2",
+    "proxy-addr": "^2.0.7",
+    "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.19",
+    "tiny-uid": "^1.1.1"
+  }
+}
