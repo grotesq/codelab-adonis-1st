@@ -20,6 +20,15 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ */
+
 Route.get('/', async () => {
   return {hello: 'world'}
 })
@@ -54,13 +63,25 @@ Route.group(() => {
   Route.delete('/posts/:slug/comments/:id', 'CommentsController.delete')
   Route.patch('/comments/:id', 'CommentsController.update') // shortcut
   Route.delete('/comments/:id', 'CommentsController.delete') // shortcut
-}).middleware('auth')
+
+  // 신고
+  Route.get('/reports', 'ReportsController.list');
+}).middleware(['auth'])
+
+Route.group(() => {
+  Route.post('/reports', 'ReportsController.create');
+
+  Route.get('/scraps', 'ScrapsController.list');
+  Route.post('/scraps', 'ScrapsController.create');
+  Route.delete('/scraps/:id', 'ScrapsController.delete');
+}).middleware(['auth', 'generalsOnly']);
+
+Route.group(() => {
+  Route.get('/posts', 'Admins/PostsController.list')
+  Route.delete('/posts/:id', 'Admins/PostsController.delete')
+
+  Route.patch('/reports/:id', 'ReportsController.update');
+}).prefix('/admins').middleware(['auth', 'adminsOnly'])
 
 // TODO : 사용자 이미지 업로드
-// TODO : 입력 데이터 유효성 검증
-// TODO : 권한 구분
-// TODO : 관리자 API
-// TODO : 신고 API
-// TODO : 문서화
-// TODO : 스크랩
 // TODO : 알림

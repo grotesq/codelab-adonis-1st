@@ -11,6 +11,19 @@ interface UpdateParams {
 }
 
 export default class MeController {
+  /**
+   * @swagger
+   * /me:
+   *   get:
+   *     tags:
+   *       - Me
+   *     summary: 내 정보 조회
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: 성공
+   */
   async getProfile( { auth } : HttpContextContract) {
     await auth.user?.load('roles');
     return auth.user;

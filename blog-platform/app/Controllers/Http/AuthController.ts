@@ -2,8 +2,43 @@ import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import User from "App/Models/User";
 import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import Role from "App/Models/Role";
+import PasswordRule from "App/RegExps/PasswordRule";
 
 export default class AuthController {
+  /**
+   * @swagger
+   * /auth/sign-up:
+   *   post:
+   *     tags:
+   *       - Auth
+   *     summary: 회원 가입
+   *     requestBody:
+   *       content:
+   *         application/x-www-form-urlencoded:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               email:
+   *                 type: string
+   *                 description: 이메일
+   *               password:
+   *                 type: string
+   *                 description: 비밀번호
+   *               displayName:
+   *                 type: string
+   *                 description: 디스플레이 네임
+   *               name:
+   *                 type: string
+   *                 description: 이름
+   *             required:
+   *               - email
+   *               - password
+   *               - displayName
+   *               - name
+   *     responses:
+   *       200:
+   *         description: 성공
+   */
   async signUp({request}: HttpContextContract) {
     const signUpSchema = schema.create({
       email: schema.string({trim: true}, [
@@ -17,7 +52,7 @@ export default class AuthController {
       name: schema.string({trim: true}),
       password: schema.string({trim: true}, [
         // rules.minLength(6),
-        rules.regex(/^([a-zA-Z0-9@*#]{6,64})$/)
+        rules.regex(PasswordRule)
       ])
     })
 
@@ -35,7 +70,7 @@ export default class AuthController {
           rules.email()
         ]),
         password: schema.string({trim: true}, [
-          rules.regex(/^([a-zA-Z0-9@*#]{6,64})$/)
+          rules.regex(PasswordRule)
         ]),
       })
     })

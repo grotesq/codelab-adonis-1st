@@ -13,6 +13,20 @@ function createSlug(subject) {
 }
 
 export default class PostsController {
+  /**
+   * @swagger
+   * /posts:
+   *   get:
+   *     tags:
+   *       - Post
+   *     summary: 포스트 조회
+   *     description: Slient Auth 적용으로 미인증/인증시 서로 다른 결과 출력
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: 성공
+   */
   async list({request}: HttpContextContract) {
     const {displayName, page, perPage} = request.qs();
     let query = Post.query()
