@@ -1,26 +1,42 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import User from "App/Models/User";
+import {schema, rules} from '@ioc:Adonis/Core/Validator'
 
 export default class AuthController {
   async signUp({request}: HttpContextContract) {
-    // TODO : 데이터 유효성 검증
-    const params = request.only([
-      'email',
-      'password',
-      'displayName',
-      'name'
-    ])
+    const signUpSchema = schema.create({
+      email: schema.string({trim: true}, [
+        rules.email(),
+        rules.unique({table: 'users', column: 'email'}),
+      ]),
+      displayName: schema.string({trim: true}, [
+        // TODO : displayName에 대한 정규표현식 적용 여부 고민 필요
+        rules.unique({table: 'users', column: 'display_name'}),
+      ]),
+      name: schema.string({trim: true}),
+      password: schema.string({trim: true}, [
+        // rules.minLength(6),
+        rules.regex(/^([a-zA-Z0-9@*#]{6,64})$/)
+      ])
+    })
+
+    const params = await request.validate({schema: signUpSchema})
 
     const user = await User.create(params)
     return user;
   }
 
   async signIn({auth, request}: HttpContextContract) {
-    // TODO : 데이터 유효성 검증
-    const params = request.only([
-      'email',
-      'password'
-    ])
+    const params = await request.validate({
+      schema: schema.create({
+        email: schema.string({trim: true}, [
+          rules.email()
+        ]),
+        password: schema.string({trim: true}, [
+          rules.regex(/^([a-zA-Z0-9@*#]{6,64})$/)
+        ]),
+      })
+    })
     const token = await auth.use('api').attempt(params.email, params.password)
     const user = await User.findByOrFail('email', params.email)
     return {
