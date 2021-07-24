@@ -1,6 +1,7 @@
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 import User from "App/Models/User";
 import {schema, rules} from '@ioc:Adonis/Core/Validator'
+import Role from "App/Models/Role";
 
 export default class AuthController {
   async signUp({request}: HttpContextContract) {
@@ -21,8 +22,9 @@ export default class AuthController {
     })
 
     const params = await request.validate({schema: signUpSchema})
-
+    const role = await Role.findByOrFail('code', 'general')
     const user = await User.create(params)
+    await user.related('roles').attach([role.id]);
     return user;
   }
 
@@ -38,7 +40,11 @@ export default class AuthController {
       })
     })
     const token = await auth.use('api').attempt(params.email, params.password)
-    const user = await User.findByOrFail('email', params.email)
+    const user = await User
+      .query()
+      .preload('roles')
+      .where('email', params.email)
+      .firstOrFail()
     return {
       user,
       token,
@@ -69,7 +75,6 @@ export default class AuthController {
     return 'ok';
   }
 }
-
 
 
 

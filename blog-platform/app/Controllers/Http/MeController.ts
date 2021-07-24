@@ -1,8 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from "App/Models/User";
 import Post from "App/Models/Post";
-import Application from '@ioc:Adonis/Core/Application'
-import { cuid } from '@ioc:Adonis/Core/Helpers'
+// import Application from '@ioc:Adonis/Core/Application'
+// import { cuid } from '@ioc:Adonis/Core/Helpers'
 
 interface UpdateParams {
   name?: string,
@@ -12,6 +12,7 @@ interface UpdateParams {
 
 export default class MeController {
   async getProfile( { auth } : HttpContextContract) {
+    await auth.user?.load('roles');
     return auth.user;
   }
 

@@ -3,8 +3,9 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import {
   column,
   beforeSave,
-  BaseModel,
+  BaseModel, manyToMany, ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
+import Role from "App/Models/Role";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -40,4 +41,7 @@ export default class User extends BaseModel {
       user.password = await Hash.make(user.password)
     }
   }
+
+  @manyToMany(() => Role)
+  public roles: ManyToMany<typeof Role>;
 }
