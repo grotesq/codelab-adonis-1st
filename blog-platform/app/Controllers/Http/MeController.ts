@@ -1,6 +1,14 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from "App/Models/User";
 import Post from "App/Models/Post";
+import Application from '@ioc:Adonis/Core/Application'
+import { cuid } from '@ioc:Adonis/Core/Helpers'
+
+interface UpdateParams {
+  name?: string,
+  displayName?: string,
+  avatar?: string,
+}
 
 export default class MeController {
   async getProfile( { auth } : HttpContextContract) {
@@ -11,11 +19,22 @@ export default class MeController {
     const displayName = request.input('displayName')
     const name = request.input('name')
     const avatar = request.input('avatar')
-    const params = {
+    // const avatar = request.file('avatar');
+    const params : UpdateParams = {
       displayName,
       name,
-      avatar,
+      avatar
     };
+
+    // 서버 인스턴스 내 스토리지에 저장할 경우
+    // if( avatar ) {
+    //   const dir = '/uploads';
+    //   const name = cuid() + '.' + avatar.clientName?.split('.').pop();
+    //   await avatar.move(Application.publicPath(dir), {
+    //     name,
+    //   })
+    //   params.avatar = `${dir}/${name}`;
+    // }
 
     if( displayName && displayName !== auth.user?.displayName ) {
       const exist = await User.findBy( 'displayName', displayName );
