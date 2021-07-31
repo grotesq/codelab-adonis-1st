@@ -15,6 +15,7 @@ export default class UsersSchema extends BaseSchema {
 
       table.string('password', 180).notNullable()
       table.string('remember_me_token').nullable()
+      table.boolean('has_verify').defaultTo(false);
 
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL

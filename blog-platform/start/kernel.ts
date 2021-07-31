@@ -45,4 +45,5 @@ Server.middleware.registerNamed({
   tempAuth: () => import('App/Middleware/Dev/TempAuth'),
   adminsOnly: () => import('App/Middleware/AdminsOnly'),
   generalsOnly: () => import('App/Middleware/GeneralsOnly'),
+  onlyVerified: () => import('App/Middleware/OnlyVerified'),
 })

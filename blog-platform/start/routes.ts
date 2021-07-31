@@ -19,6 +19,9 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import crypto from 'crypto';
+import Database from "@ioc:Adonis/Lucid/Database";
+import User from "App/Models/User";
 
 /**
  * @swagger
@@ -37,7 +40,17 @@ Route.post('/auth/sign-up', 'AuthController.signUp');
 Route.post('/auth/sign-in', 'AuthController.signIn');
 Route.get('/auth/verify-email', 'AuthController.verifyEmail');
 Route.get('/auth/verify-display-name', 'AuthController.verifyDisplayName')
-Route.post( '/auth/request-password-reset', 'AuthController.requestPasswordReset')
+Route.post('/auth/request-password-reset', 'AuthController.requestPasswordReset')
+Route.get('/auth/reset-password/:token', 'AuthController.resetPasswordForm')
+Route.patch('/auth/reset-password/:token', 'AuthController.resetPassword')
+Route.post('/auth/verify-exist-email', 'AuthController.verifyExistEmail')
+Route.get('/auth/sign-up', ({request}) => {
+  if (!request.hasValidSignature()) {
+    return 'error';
+  }
+  return '회원가입';
+})
+Route.get('/auth/sign-up/verify-email/:token', 'AuthController.verifyEmailForSignUp')
 
 Route.get('/posts', 'PostsController.list');
 Route.get("/posts/:slug", 'PostsController.read'); // shortcut
@@ -83,6 +96,28 @@ Route.group(() => {
 
   Route.patch('/reports/:id', 'ReportsController.update');
 }).prefix('/admins').middleware(['auth', 'adminsOnly'])
+
+Route.get('/email-verified-only', () => {
+  return '인증된 사용자 전용 페이지';
+}).middleware(['auth', 'onlyVerified'])
+
+Route.get('/socket-demo', ({view}) => {
+  return view.render('socket');
+})
+
+Route.get('/find-user', async ({request}) => {
+  const {token} = request.qs();
+  const split = token.split('.');
+  const id = Buffer.from(split[0], "base64").toString("utf-8");
+  const hash = crypto.createHash('sha256').update(split[1]).digest('hex');
+  const apiToken = await Database.from('api_tokens')
+    .select(['user_id'])
+    .where('id', id)
+    .where('token', hash)
+    .firstOrFail()
+  const user = await User.findOrFail( apiToken.user_id )
+  return user;
+})
 
 // TODO : 사용자 이미지 업로드
 // TODO : 알림

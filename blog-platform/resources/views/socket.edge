@@ -1,0 +1,12 @@
+<body>
+  socket demo
+  <!-- Rest of markup -->
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script>
+      const socket = io()
+      socket.on( 'new-post', ( data ) => {
+        console.log( data );
+      } );
+    </script>
+</body>
+</html>
