@@ -3,6 +3,7 @@ import User from "App/Models/User";
 import {schema, rules} from '@ioc:Adonis/Core/Validator'
 import Role from "App/Models/Role";
 import PasswordRule from "App/RegExps/PasswordRule";
+import Mail from '@ioc:Adonis/Addons/Mail'
 
 export default class AuthController {
   /**
@@ -138,6 +139,41 @@ export default class AuthController {
       return {message: '이미 사용중인 디스플레이 네임입니다.'}
     }
     return 'ok';
+  }
+
+  /**
+   * @swagger
+   * /auth/request-password-reset:
+   *   post:
+   *     tags:
+   *       - Auth
+   *     summary: 비밀번호 재설정 요청
+   *     requestBody:
+   *       content:
+   *         application/x-www-form-urlencoded:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               email:
+   *                 type: string
+   *                 description: 이메일
+   *             required:
+   *               - email
+   *     responses:
+   *       200:
+   *         description: 성공
+   */
+  async requestPasswordReset({request} :HttpContextContract) {
+    const email = request.input('email');
+
+    // email test
+    await Mail.send((message) => {
+      message
+        .from('info@example.com')
+        .to(email)
+        .subject('Welcome Onboard!')
+        .htmlView('emails/request_password_reset', { name: 'John' } );
+    } );
   }
 }
 

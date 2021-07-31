@@ -19,7 +19,6 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import Encryption from '@ioc:Adonis/Core/Encryption'
 
 /**
  * @swagger
@@ -38,15 +37,11 @@ Route.post('/auth/sign-up', 'AuthController.signUp');
 Route.post('/auth/sign-in', 'AuthController.signIn');
 Route.get('/auth/verify-email', 'AuthController.verifyEmail');
 Route.get('/auth/verify-display-name', 'AuthController.verifyDisplayName')
+Route.post( '/auth/request-password-reset', 'AuthController.requestPasswordReset')
 
 Route.get('/posts', 'PostsController.list');
 Route.get("/posts/:slug", 'PostsController.read'); // shortcut
 Route.get("/posts/:slug/comments", 'CommentsController.list');
-
-Route.get( '/encryption-test', () => {
-  const encrypted = Encryption.encrypt( '010-1234-1234' );
-  return Encryption.decrypt( encrypted );
-} );
 
 Route.get('/users/:displayName', 'UsersController.list');
 Route.get('/users/:displayName/:slug', 'UsersController.read');
