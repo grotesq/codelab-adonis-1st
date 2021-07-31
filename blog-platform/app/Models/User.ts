@@ -1,11 +1,8 @@
-import { DateTime } from 'luxon'
+import {DateTime} from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import {
-  column,
-  beforeSave,
-  BaseModel, manyToMany, ManyToMany,
-} from '@ioc:Adonis/Lucid/Orm'
+import {afterFind, BaseModel, beforeSave, column, ManyToMany, manyToMany,} from '@ioc:Adonis/Lucid/Orm'
 import Role from "App/Models/Role";
+import Encryption from "@ioc:Adonis/Core/Encryption";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -23,6 +20,9 @@ export default class User extends BaseModel {
   @column()
   public avatar? : string
 
+  @column()
+  public contact? : string
+
   @column({ serializeAs: null })
   public password: string
 
@@ -39,6 +39,20 @@ export default class User extends BaseModel {
   public static async hashPassword (user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
+    }
+  }
+
+  @beforeSave()
+  public static async encryptContact( user: User ) {
+    if( user.$dirty.contact ) {
+      user.contact = Encryption.encrypt( user.contact );
+    }
+  }
+
+  @afterFind()
+  public static async decryptContact(user : User) {
+    if( user.contact ) {
+      user.contact = Encryption.decrypt( user.contact ) || '';
     }
   }
 

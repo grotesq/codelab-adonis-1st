@@ -30,6 +30,9 @@ export default class AuthController {
    *               name:
    *                 type: string
    *                 description: 이름
+   *               contact:
+   *                 type: string
+   *                 description: 연락처
    *             required:
    *               - email
    *               - password
@@ -53,7 +56,8 @@ export default class AuthController {
       password: schema.string({trim: true}, [
         // rules.minLength(6),
         rules.regex(PasswordRule)
-      ])
+      ]),
+      contact: schema.string.optional({trim: true}),
     })
 
     const params = await request.validate({schema: signUpSchema})
@@ -63,6 +67,32 @@ export default class AuthController {
     return user;
   }
 
+  /**
+   * @swagger
+   * /auth/sign-in:
+   *   post:
+   *     tags:
+   *       - Auth
+   *     summary: 로그인
+   *     requestBody:
+   *       content:
+   *         application/x-www-form-urlencoded:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               email:
+   *                 type: string
+   *                 description: 이메일
+   *               password:
+   *                 type: string
+   *                 description: 비밀번호
+   *             required:
+   *               - email
+   *               - password
+   *     responses:
+   *       200:
+   *         description: 성공
+   */
   async signIn({auth, request}: HttpContextContract) {
     const params = await request.validate({
       schema: schema.create({

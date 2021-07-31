@@ -11,6 +11,7 @@ export default class UsersSchema extends BaseSchema {
       table.string('display_name', 31).notNullable().unique()
       table.string('name', 31).notNullable()
       table.string('avatar', 255).nullable()
+      table.string('contact', 255).nullable()
 
       table.string('password', 180).notNullable()
       table.string('remember_me_token').nullable()

@@ -19,6 +19,7 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import Encryption from '@ioc:Adonis/Core/Encryption'
 
 /**
  * @swagger
@@ -41,6 +42,11 @@ Route.get('/auth/verify-display-name', 'AuthController.verifyDisplayName')
 Route.get('/posts', 'PostsController.list');
 Route.get("/posts/:slug", 'PostsController.read'); // shortcut
 Route.get("/posts/:slug/comments", 'CommentsController.list');
+
+Route.get( '/encryption-test', () => {
+  const encrypted = Encryption.encrypt( '010-1234-1234' );
+  return Encryption.decrypt( encrypted );
+} );
 
 Route.get('/users/:displayName', 'UsersController.list');
 Route.get('/users/:displayName/:slug', 'UsersController.read');
